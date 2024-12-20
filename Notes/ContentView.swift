@@ -11,32 +11,37 @@ struct ContentView: View {
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
             
-            ZStack() {
-                Circle()
-                    .background(Color.blue)
-                    .padding()
-                    .background(Color.red)
-                    .frame(width: 100, height: 100)
+            HStack {
+                ZStack() {
+                    Circle()
+                        .background(Color.blue)
+                        .padding(5)
+                        .background(Color.red)
+                        .frame(width: 50, height: 50)
+                    
+                    Image(systemName: "star.fill")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                        .foregroundStyle(Color.red)
+                }
                 
-                Image(systemName: "star.fill")
-                    .resizable()
-                    .frame(width: 20, height: 20)
-                    .foregroundStyle(Color.red)
+                Text("Hello, Platzi! buenas buenas")
+                    .font(.system(size: 30))
+                    .lineLimit(2)
+                    .padding(10)
+                    .multilineTextAlignment(.leading)
+                    .bold()
+                    .underline()
             }
-            
-            
+                    
+            Spacer()
             Image("logo")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 100, height: 100)
+                // .frame(width: 100, height: 100)
                 
-            
-            Text("Hello, Platzi! buenas buenas")
-                .font(.system(size: 30))
-                .lineLimit(2)
-                .multilineTextAlignment(.center)
-                .bold()
-                .underline()
+    
+            Spacer()
             
             Button(action: {
                     print("Button with icon tapped!")
