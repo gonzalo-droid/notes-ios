@@ -21,8 +21,18 @@ class AppInfo : ObservableObject {
         NCard(title: "Coffee", text: "Ground coffee for the French press", type: .small, isFavorite: true)
     ]
     
+    var favorites : [NCard] {
+        cards.filter{$0.isFavorite}
+    }
+    
     func addNote(card : NCard) {
         cards.append(card)
+    }
+    
+    func toggleFavorite(card: NCard) {
+        if let index = cards.firstIndex(of: card) {
+            cards[index].isFavorite.toggle()
+        }
     }
 }
 

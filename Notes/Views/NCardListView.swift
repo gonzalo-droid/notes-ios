@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct NCardList: View {
+struct NCardListView : View {
     
     @EnvironmentObject var appInfo : AppInfo
     
@@ -15,11 +15,18 @@ struct NCardList: View {
     @State var showDetails : Bool = false
     @State var selectedCard : NCard?
     
+    var forFavorites : Bool = false
+    
     var body: some View {
         NavigationStack {
             List {
-                ForEach(appInfo.cards) { card in
-                    NCardView(card: card)
+                ForEach(
+                    forFavorites ? appInfo.favorites : appInfo.cards
+                ) { card in
+                    NCardView(card: card){
+                        appInfo.toggleFavorite(card: card)
+                    }
+                        
                         .onTapGesture {
                             selectedCard = card
                             showDetails = true
@@ -27,6 +34,13 @@ struct NCardList: View {
                 }
             }
             .listStyle(.plain)
+            .sheet(isPresented: $showSheet, content: {
+                NCreateNoteView() { card in
+                    appInfo.addNote(card: card)
+                    print(card)
+                    showSheet = false
+                }
+            })
             .navigationDestination(isPresented: $showDetails, destination: {
                 if let selectedCard {
                     NDetailNoteView(card: selectedCard)
@@ -37,18 +51,16 @@ struct NCardList: View {
             .toolbarBackground(Color.cyan.opacity(0.4), for: .navigationBar)
             .toolbar{
                 Button {
-                    
+                    showSheet = true
                 } label: {
                     Image(systemName: "plus")
                 }
             }
         }
-    
-        
     }
 }
 
 #Preview {
-    NCardList()
+    NCardListView()
         .environmentObject(AppInfo())
 }

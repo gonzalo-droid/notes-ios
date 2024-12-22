@@ -10,57 +10,31 @@ import SwiftUI
 
 
 
-struct RetoCards: View {
-    @State private var showSheet = false
+struct ListView: View {
 
     @StateObject var appInfo = AppInfo()
     
-    
-    
     var body: some View {
-        NCardList()
-            .environmentObject(appInfo)
-            .sheet(isPresented: $showSheet, content: {
-                NCreateNoteView() { card in                
-                    appInfo.addNote(card: card)
-                    print(card)
-                    showSheet = false
+        TabView {
+            NCardListView()
+                .tabItem {
+                    Label("Home",systemImage: "house.fill")
                 }
-            })
-            .overlay{
-                VStack{
-                    Spacer()
-                    
-                    Button(action: {
-                        showSheet = true
-                    }) {
-                        HStack(
-                            alignment: .center
-                        ) {
-                            Image(systemName: "paperplane.fill")
-                                .foregroundColor(.yellow)
-                            Text("Show Sheet")
-                                .fontWeight(.bold)
-                                
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.purple)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                    }
-                    .padding()
-                    .background(Color.white)
-                    
+            
+            NCardListView(forFavorites: true)
+                .tabItem {
+                    Label("Favorites", systemImage: "heart")
                 }
-            }
+            
+        }
+            .environmentObject(appInfo)        
     }
 }
 
 
 
 #Preview {
-    RetoCards()
+    ListView()
         .padding()
 }
 

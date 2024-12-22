@@ -11,6 +11,18 @@ struct NCardView: View {
     
     let card: NCard
     
+    
+    var onToggleFavorite : (() -> Void)?
+    
+    
+    func FavoriteButton() -> some View {
+        Image(systemName: card.isFavorite ? "heart.fill" : "heart")
+            .foregroundStyle(Color.red)
+            .onTapGesture {
+                onToggleFavorite?()
+            }
+    }
+    
     @ViewBuilder
     func CardHorizontalView() -> some View {
         HStack {
@@ -28,8 +40,8 @@ struct NCardView: View {
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity)
             
-            Image(systemName: "heart.fill")
-                .foregroundStyle(Color.red)
+            FavoriteButton()
+     
         }
         .padding()
         .background(Color.gray.opacity(0.1))
@@ -40,8 +52,7 @@ struct NCardView: View {
         VStack {
             HStack(alignment: .top) {
                 Spacer()
-                Image(systemName: "heart")
-                    .foregroundStyle(Color.red)
+                FavoriteButton()
             }
             Text(card.title)
                 .font(.title2)
