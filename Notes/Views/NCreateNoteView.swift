@@ -9,13 +9,8 @@ import SwiftUI
 
 struct NCreateNoteView: View {
     
-    @State var title: String = ""
-    @State var description: String = ""
-    @State var colorTF: Color = Color.gray.opacity(0.2)
-    @State var colorTE: Color = Color.gray.opacity(0.2)
-    @State private var showAlert = false
-    @State var size: NCardType = .small
-    @State var isFavorite: Bool = false
+    @StateObject var viewModel : NCreateNoteViewModel = NCreateNoteViewModel()
+
     var onNoteCreated: ((NCard) -> Void)?
 
 
@@ -37,9 +32,9 @@ struct NCreateNoteView: View {
                 }.padding()
                                     
                 
-                Toggle("Favorite", isOn: $isFavorite)
-                    .onChange(of: isFavorite){ newValue in
-                        isFavorite = newValue
+                Toggle("Favorite", isOn: $viewModel.isFavorite)
+                    .onChange(of: viewModel.isFavorite){ newValue in
+                        viewModel.isFavorite = newValue
                     }.padding()
                 
                 Spacer()
@@ -56,8 +51,8 @@ struct NCreateNoteView: View {
     }
     
     func onTap(){
-        let card = NCard(title: title, text: description, type: size, isFavorite: isFavorite)
-        
+            
+        let card = viewModel.createNote()
         onNoteCreated?(card)
         
         print("Note: \(card)")
@@ -82,28 +77,28 @@ struct NCreateNoteView: View {
     
     @ViewBuilder
     func TextFieldView() -> some View {
-        TextField("Título", text: $title)
+        TextField("Título", text: $viewModel.title)
             .font(.headline)
             .padding()
-            .background(colorTF)
+            .background(Color.gray.opacity(0.2))
             .cornerRadius(8)
     }
     
     
     @ViewBuilder
     func TextEditorView() -> some View {
-        TextEditor(text: $description)
+        TextEditor(text: $viewModel.description)
             .font(.body)
             .frame(height: 150)
             .padding()
-            .background(colorTE)
+            .background(Color.gray.opacity(0.2))
             .cornerRadius(8)
             .scrollContentBackground(.hidden)
     }
     
     @ViewBuilder
     func CustomPickerView() -> some View {
-        Picker("Size", selection: $size){
+        Picker("Size", selection: $viewModel.size){
             Text("Small").tag(NCardType.small)
             Text("Medium").tag(NCardType.medium)
                }
@@ -115,7 +110,7 @@ struct NCreateNoteView: View {
         
         Button(action: {
             onTap()
-            showAlert = true
+            viewModel.showAlert = true
         }) {
             HStack(
                 alignment: .center, spacing: 10
@@ -132,7 +127,7 @@ struct NCreateNoteView: View {
             .foregroundColor(.white)
             .cornerRadius(10)
         }
-        .alert("Create successful", isPresented: $showAlert) {
+        .alert("Create successful", isPresented: $viewModel.showAlert) {
                     Button("OK", role: .cancel) { }
                 } message: {
                     Text("Save note")
