@@ -25,7 +25,6 @@ struct RetoCards: View {
                     appInfo.addNote(card: card)
                     print(card)
                     showSheet = false
-
                 }
             })
             .overlay{

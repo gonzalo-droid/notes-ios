@@ -11,15 +11,39 @@ struct NCardList: View {
     
     @EnvironmentObject var appInfo : AppInfo
     
-    @State private var showSheet = false
+    @State var showSheet : Bool = false
+    @State var showDetails : Bool = false
+    @State var selectedCard : NCard?
     
     var body: some View {
-        List {
-            ForEach(appInfo.cards) { card in
-                NCardView(card: card)
+        NavigationStack {
+            List {
+                ForEach(appInfo.cards) { card in
+                    NCardView(card: card)
+                        .onTapGesture {
+                            selectedCard = card
+                            showDetails = true
+                        }
+                }
+            }
+            .listStyle(.plain)
+            .navigationDestination(isPresented: $showDetails, destination: {
+                if let selectedCard {
+                    NDetailNoteView(card: selectedCard)
+                }
+            })
+            .navigationTitle("Notes")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(Color.cyan.opacity(0.4), for: .navigationBar)
+            .toolbar{
+                Button {
+                    
+                } label: {
+                    Image(systemName: "plus")
+                }
             }
         }
-        .listStyle(.plain)
+    
         
     }
 }

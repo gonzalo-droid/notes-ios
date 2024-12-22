@@ -21,7 +21,7 @@ struct NCreateNoteView: View {
                 
                 Spacer(minLength: 50)
                 
-                TextFieldView()
+                TextFieldComponent(placeholder: "Título", text: $viewModel.title)
             
                 TextEditorView()
                 
